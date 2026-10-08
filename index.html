@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Tic Tac Toe</h1>
+
+    <form id="player-form">
+      <label>
+        Player X
+        <input type="text" name="player1" placeholder="Player 1" maxlength="20">
+      </label>
+      <label>
+        Player O
+        <input type="text" name="player2" placeholder="Player 2" maxlength="20">
+      </label>
+      <button type="submit">Start new game</button>
+    </form>
+
+    <p id="status" aria-live="polite"></p>
+
+    <div id="board"></div>
+
+    <p id="scores"></p>
+
+    <button type="button" id="restart">Restart round</button>
+  </main>
+</body>
+</html>

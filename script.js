@@ -97,3 +97,66 @@ const GameController = (() => {
 
   return { playRound, restart, setPlayers, getActivePlayer, getPlayers, getWinner, isGameOver };
 })();
+
+const displayController = (() => {
+  const boardEl = document.querySelector("#board");
+  const statusEl = document.querySelector("#status");
+  const scoresEl = document.querySelector("#scores");
+  const form = document.querySelector("#player-form");
+  const restartBtn = document.querySelector("#restart");
+
+  const renderBoard = () => {
+    boardEl.textContent = "";
+    const gameOver = GameController.isGameOver();
+
+    Gameboard.getBoard().forEach((mark, index) => {
+      const cell = document.createElement("button");
+      cell.type = "button";
+      cell.className = "cell";
+      cell.dataset.index = index;
+      cell.textContent = mark;
+      if (mark) cell.classList.add(mark === "X" ? "x" : "o");
+      cell.disabled = gameOver || mark !== "";
+      cell.setAttribute("aria-label", `Cell ${index + 1}${mark ? `, ${mark}` : ""}`);
+      boardEl.appendChild(cell);
+    });
+  };
+
+  const renderScores = () => {
+    scoresEl.textContent = GameController.getPlayers()
+      .map((p) => `${p.name} (${p.mark}): ${p.getScore()}`)
+      .join("  ·  ");
+  };
+
+  const turnMessage = () => {
+    const player = GameController.getActivePlayer();
+    return `${player.name}'s turn (${player.mark})`;
+  };
+
+  const render = (message = turnMessage()) => {
+    renderBoard();
+    renderScores();
+    statusEl.textContent = message;
+  };
+
+  boardEl.addEventListener("click", (e) => {
+    const cell = e.target.closest(".cell");
+    if (!cell) return;
+    render(GameController.playRound(Number(cell.dataset.index)));
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name1 = form.elements.player1.value.trim() || undefined;
+    const name2 = form.elements.player2.value.trim() || undefined;
+    GameController.setPlayers(name1, name2);
+    render();
+  });
+
+  restartBtn.addEventListener("click", () => {
+    GameController.restart();
+    render();
+  });
+
+  render();
+})();
